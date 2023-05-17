@@ -1,7 +1,7 @@
 import React from 'react'
-import {Redirect , Route } from 'react-router';
+import {Redirect , Route } from 'react-router-dom';
 
-const  PrivateRoute = ([ children , ...routePropes]) => {
+const  PrivateRoute = ({children , ...routePropes}) => {
 
     const profile = false;
 
