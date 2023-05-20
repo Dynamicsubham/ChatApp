@@ -36,7 +36,9 @@ const onSave = async newData => {
       onSave={onSave}
       label={<h6 className="mb-2">NickName</h6>}
     />
+
     <AvatarUploadBtn />
+    
   </Drawer.Body>
 
 
