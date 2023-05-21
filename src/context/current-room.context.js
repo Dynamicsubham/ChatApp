@@ -13,4 +13,5 @@ export const CurrentRoomProvider = ({children , data}) => {
     );    
 };
 
-export const useCurrentRoom = (selector) => useContextSelector(CurrentRoomContext,selector);
+export const useCurrentRoom = (selector) => 
+useContextSelector(CurrentRoomContext, selector);

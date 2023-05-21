@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { InputGroup, Input, Icon, Alert } from 'rsuite';
-import {useParams} from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useProfile } from '../../../context/profile.context';
 import firebase from 'firebase/app';
 import { database } from '../../../misc/firebase';
