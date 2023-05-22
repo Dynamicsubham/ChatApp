@@ -1,5 +1,5 @@
 import { FunnelTime } from "@rsuite/icons";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { database } from "./firebase";
 
 
@@ -56,3 +56,27 @@ export const useMediaQuery = query => {
         return presence;  
   }
   
+
+ export function useHover() {
+    const [value, setValue] = useState(false);
+    const ref = useRef(null);
+    const handleMouseOver = () => setValue(true);
+    const handleMouseOut = () => setValue(false);
+    useEffect(
+      () => {
+        const node = ref.current;
+        if (node) {
+          node.addEventListener("mouseover", handleMouseOver);
+          node.addEventListener("mouseout", handleMouseOut);
+        }
+        return () => {
+            node.removeEventListener("mouseover", handleMouseOver);
+            node.removeEventListener("mouseout", handleMouseOut);
+          };
+      },
+      
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [ref.current] // Recall only if ref changes
+    );
+    return [ref, value];
+  }
