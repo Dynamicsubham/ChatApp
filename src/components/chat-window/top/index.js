@@ -14,7 +14,7 @@ const Top = () => {
     const isAdmin = useCurrentRoom(v => v.isAdmin);
 
   return (
-    <div>
+    <div className='mp-1'>
       <div className='d-flex justify-content-between align-items-center'>
         <h4 className='text-disappear d-flex align-items-center'>
             <Icon 
@@ -27,14 +27,14 @@ const Top = () => {
                 : 'd-none'
               } 
             />
-         <span className='text-disappear'>{name }</span>
+         <span className='text-disappear'> {name} </span>
         </h4>
         <ButtonToolbar className='ws-nowrap'> 
            {isAdmin && <EditRoomBtnDrawer  />}
         </ButtonToolbar> 
       </div>
       <div className="d-flex justify-content-between align-items-center"> 
-        <span>Todo</span>
+        <span> </span> 
         <RoomInfoBtnModal />
       </div>
     </div>

@@ -7,7 +7,7 @@ import { useCurrentRoom } from '../../../context/current-room.context';
 import { database } from '../../../misc/firebase';
 
 const EditRoomBtnDrawer = () => {
-    const isMobile = useMediaQuery('(max-width: 992px)');
+    const isMobile = useMediaQuery(('(max-width: 992px)'));
     const {isOpen, open, close} = useModelState();
     const name = useCurrentRoom(v => v.name);
     const description = useCurrentRoom(v => v.description);
