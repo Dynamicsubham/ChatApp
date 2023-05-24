@@ -4,24 +4,42 @@ import TimeAgo from 'timeago-react';
 import ProfileAvatar from '../../ProfileAvatar';
 import ProfileInfoBtnModel from './ProfileInfoBtnModel';
 import PresenceDot from '../../PresenceDot';
-
 import { useCurrentRoom } from '../../../context/current-room.context';
 import { auth } from '../../../misc/firebase';
-import { useHover } from '../../../misc/customhooks';
+import { useHover, useMediaQuery } from '../../../misc/customhooks';
 import IconBtnControl from './IconBtnControl';
+import ImgBtnModal from './ImgBtnModal';
+
+const renderFileMessage = (file) => {
+  
+  if(file.contentType.includes('image')) {
+    return (
+      <div className='height-220'>
+      <ImgBtnModal
+      src={file.url} 
+      fileName={file.name} />
+      </div>
+    );
+  };
 
 
 
-const MessageItem = ({ messages , handleAdmin }) => {
-  const { author, createdAt, text } = messages;
+  return <a href={file.url}> Download{file.name}</a>
+}
+
+
+
+const MessageItem = ({ messages , handleAdmin, handleLike, handleDelete }) => {
+  const { author, createdAt, text, file, likes, likeCount} = messages;
   const [selfRef , isHovered] = useHover();
-
+  const isMobile = useMediaQuery(('(max-width: 992px)'));
   const isAdmin = useCurrentRoom(v => v.isAdmin);
   const admins = useCurrentRoom(v => v.admins);
-
   const isMsgAuthorAdmin = admins.includes(author.uid);
   const isAuthor = auth.currentUser.uid === author.uid;
   const canGrantAdmin = isAdmin && !isAuthor;
+  const canShowIcons = isMobile || isHovered;
+  const isLiked = likes && Object.keys(likes).includes(auth.currentUser.uid);
 
   return (
     <li className={`padded mb-1 cursor-pointer ${isHovered ? 'bg-black-05' : ''}`} ref={selfRef}>
@@ -47,18 +65,36 @@ const MessageItem = ({ messages , handleAdmin }) => {
         />
 
         <IconBtnControl
-        
-        isVisible
+        // eslint-disable-next-line no-constant-condition
+        {...(isLiked ? {color: 'red'} : {})}
+        isVisible={canShowIcons}
         iconName="heart"
         tooltip="Like this message"
-        onClick={() => {}}
-        badgeContent={1}
+        onClick={() => handleLike(messages.id)}
+        badgeContent={likeCount}
         />
+
+        {isAuthor && 
+        <IconBtnControl
+        // eslint-disable-next-line no-constant-condition
+        isVisible={canShowIcons}
+        iconName="trash"
+        tooltip="Delete this message"
+        onClick={() => handleDelete(messages.id)}
+        />}
+
       </div>
 
       
         <div>
-            <span className='word-break-all'>{text}</span>
+          {text && 
+          
+          <span className='word-break-all'>{text}</span>}
+
+          {file && 
+          renderFileMessage(file)
+          }
+            
         </div>
     </li>
   )

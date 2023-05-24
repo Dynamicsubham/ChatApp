@@ -10,7 +10,7 @@ import EditRoomBtnDrawer from './EditRoomBtnDrawer';
 
 const Top = () => {
     const name = useCurrentRoom(v => v.name);
-    const isMobile = useMediaQuery('(max-width: 992px)');
+    const isMobile = useMediaQuery(('(max-width: 992px)'));
     const isAdmin = useCurrentRoom(v => v.isAdmin);
 
   return (
