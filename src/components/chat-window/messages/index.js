@@ -1,7 +1,7 @@
 import React, { useState , useEffect, useCallback } from 'react'
 import { useParams } from 'react-router-dom/cjs/react-router-dom';
-import { auth, database } from '../../../misc/firebase';
-import { transformToArrWithId } from '../../../misc/helpers';
+import { auth, database, storage } from '../../../misc/firebase';
+import { groupBy, transformToArrWithId } from '../../../misc/helpers';
 import MessageItem from './MessageItem';
 import { Alert } from 'rsuite';
 
@@ -82,7 +82,7 @@ const handleLike = useCallback(async (msgId) => {
 }, []);
 
 
-const handleDelete = useCallback(async (msgId) => {
+const handleDelete = useCallback(async (msgId , file) => {
   if(!window.confirm('Delete this message?')) {
     return;
   }
@@ -108,26 +108,59 @@ const handleDelete = useCallback(async (msgId) => {
     await database.ref().update(updates);
     Alert.info('Message deleted');
   } catch (err) {
-    Alert.error(err.messages, 4000);
+    return Alert.error(err.messages, 4000);
   }
 
-
-
+  if(file) {
+    try {
+      const fileRef = storage.refFromURL(file.url);
+      await fileRef.delete();
+      Alert.info('Message deleted');
+  } catch (err) {
+    Alert.error(err.messages, 4000);
+  }
+}
   
 }, [chatId , messages]);
 
-  return (
-    <ul className='msg-list custom-scroll'>
+const renderMessages = () => {
+  const groups = groupBy(messages, (item) => new Date(item.createdAt).toDateString());
+  let items = [];
 
-      {isChatEmpty && <li>No messages yet</li>}
-      {canShowMessages && messages.map(msg => 
+  Object.keys(groups).forEach((date) => {
+    items.push(
+    <li key={date}
+      className='text-center mb-1 padded'>
+        {date}
+    </li>
+    );
+    
+    const msgs = groups[date]
+    .map(msg => (
       <MessageItem 
       key={msg.id} 
       messages={msg} 
       handleAdmin={handleAdmin} 
       handleLike={handleLike}
       handleDelete={handleDelete}
-      /> )}
+      /> ));
+
+      items.push(...msgs);
+      
+  })
+
+  return items;
+
+};
+
+
+
+
+  return (
+    <ul className='msg-list custom-scroll'>
+
+      {isChatEmpty && <li>No messages yet</li>}
+      {canShowMessages && renderMessages()}
       
     </ul>
   )

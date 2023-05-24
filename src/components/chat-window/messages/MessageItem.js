@@ -22,10 +22,19 @@ const renderFileMessage = (file) => {
     );
   };
 
+  if(file.contentType.includes('audio')) {
+    return (
+      <audio controls>
+      <source src={file.url} type='audio/mp3' />
+      Your Browser does not support the audio element.
 
+    </audio>
+    );
+
+  }
 
   return <a href={file.url}> Download{file.name}</a>
-}
+};
 
 
 
@@ -80,7 +89,7 @@ const MessageItem = ({ messages , handleAdmin, handleLike, handleDelete }) => {
         isVisible={canShowIcons}
         iconName="trash"
         tooltip="Delete this message"
-        onClick={() => handleDelete(messages.id)}
+        onClick={() => handleDelete(messages.id , file)}
         />}
 
       </div>

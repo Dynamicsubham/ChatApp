@@ -23,7 +23,7 @@ const AttachmentBtnModal = ({afterUpload}) => {
      try {
 
       const uploadPromises = fileList.map(f => {
-        return storage.ref(`/chat/$chatId}`)
+        return storage.ref(`/chat/${chatId}`)
         .child(Date.now() + f.name)
         .put(f.blobFile, {
           cacheControl: `public , max-age=${3600 * 24 * 3}`,
